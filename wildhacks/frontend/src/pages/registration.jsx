@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "./registration.css";
 
 export default function Registration() {
   const [userName, setUserName] = useState("");
