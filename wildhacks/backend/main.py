@@ -1,10 +1,11 @@
 from flask import Flask 
-import sqlite3 as sql
 from google import genai
+import sqlite3 as sql
+import random
 
 
 client = genai.Client(api_key="AIzaSyCkMunEJLQTp4-yqZ-WRwdWxUuq1TqjJmc")
-# app = Flask(__name__)
+app = Flask(__name__)
 
 
 def getScenario(scenario):
@@ -37,7 +38,7 @@ def getPotentialMoves(scenario, categories):
             5. Do not include any explanations, introductions, or additional text.
             
             Example format:
-            "Climb the fence quickly, Crawl through the tight space, Sprint across the open field, Search for hidden clues"
+            "Climb the fence quickly,Crawl through the tight space,Sprint across the open field,Search for hidden clues"
         """
     )
 
@@ -45,7 +46,10 @@ def getPotentialMoves(scenario, categories):
     if len(options) == 4:
         return options
     else:
-        default_options = ["Use strength to force through", "Move quickly to dodge", "Carefully maintain balance", "Find a creative solution"]
+        default_options = ["Use strength to force through", 
+                           "Move quickly to dodge", 
+                           "Carefully maintain balance", 
+                           "Find a creative solution"]
         while len(options) < 4:
             options.append(default_options[len(options) - 1])
     
@@ -63,7 +67,7 @@ def getMoveRequirements(scenario, moves, categories):
             Important rules:
             1. You MUST provide exactly 4 options - no more, no less.
             2. Format your response as four integers separated by commas ONLY.
-            3. 0 is very easy, while 10 is extremely hard. 3-6 should be the average ability of a human.
+            3. 0 is very easy, while 10 is extremely hard. 4 should be the average ability of a human.
             4. Do not include any explanations, introductions, or additional text.
             
             Example format:
@@ -77,16 +81,41 @@ def getMoveRequirements(scenario, moves, categories):
     if len(options) == 4:
         return options_int
     else:
-        default_options = [6, 4, 2, 4]
+        default_options = [6, 4, 2, 3]
         while len(options) < 4:
             options.append(default_options[len(options) - 1])
     
     return ', '.join(options[:4])
 
 
-def getMoveResult(scenario, action, is_success:bool, alive:bool):
-    pass
+def getMoveResult(scenario, action, player_death:bool, is_success:bool):
+    response = client.models.generate_content(
+        model="gemini-2.0-flash", 
+        contents=f"""
+            Given this scenario: {scenario}, and the player's action: {action}.
+    
+            Generate the outcome of this action with these parameters:
+            - Player death: {player_death}
+            - Action success: {is_success}
+            
+            Requirements:
+            1. Return ONLY the narrative outcome as a single paragraph.
+            2. No introductions, explanations, or meta-commentary.
+            3. Be vivid and specific to the scenario and action taken.
+        """
+    )
+    return response
 
+
+def getProbabilities(stats, requirements):
+    probs = []
+    for i in range(0,4):
+        if stats[i] >= requirements[i]:
+            probs.append(1.0)
+        else:
+            probs.append(stats[i]/requirements[i])
+
+    return probs
 
 
 @app.route("/")
@@ -94,23 +123,28 @@ def main():
     return "<h1> Hello. This is the main file.</h1>"
 
 
-@app.route("/getScenarioAndMoves/<scenario>/<stats>")
-def getScenarioAndMoves(scenario="zombie apocalypse", stats=[5,5,5,5]):
-    
+# Example function call: http://127.0.0.1:5001/getScenarioAndMoves/[4,5,2,3]
+@app.route("/getScenarioAndMoves/<stats>")
+def getScenarioAndMoves(stats):
+    stats = [float(s) for s in stats if s.isdigit()]
+
     # get the scenario and actions
     categories = ["Strength", "Stamina/Endurance", "agility/speed", "Wildcard"]
     
-    
-    scenario = getScenario(scenario)
-    moves = getPotentialMoves(scenario, categories)
-    probability = getMoveRequirements(scenario, moves, categories)
+    scenario = getScenario("Zombie Apocolypse")
+    moves = getPotentialMoves(scenario.text, categories)
+    requirement = getMoveRequirements(scenario.text, moves, categories)
+    probability = getProbabilities(stats, requirement)
 
-    # Output the scenario and action -- DEBUGGING PURPOSES ONLY...
-    # print(scenario.text)
-    # print("\n\n\n")
-    
-    # for i in range(0,4):
-        # print(f"{categories[i]}: {moves[i]} ({probability}%)")
-    
+    return {"scenario":scenario.text, "moves":moves, "probability": probability}
 
-    return {"scenario":scenario, "moves":moves, "probability": probability}
+
+@app.route("/getResult/<scenario>/<action>/<death>/<success>")
+def getActionResult(scenario, action, death, success):
+    result = getMoveResult(scenario, action, death, success)
+
+    return result.text
+
+
+if __name__ == "__main__":
+    app.run(port=5001, debug=True)
