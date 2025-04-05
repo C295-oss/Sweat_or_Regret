@@ -1,15 +1,15 @@
-import { useNavigate } from "react-router-dom";
-
+import { useNavigate } from  "react-router-dom";
 
 export default function Button({ label, navigateTo, onClick, type = "button", className = "" }) {
   const navigate = useNavigate();
 
+
   const handleClick = () => {
-    if (onClick) {
-      onClick(); // Calls the passed onClick function if provided
+    if (onClick) {// Calls the passed onClick function if provided
+      onClick(onClick); 
     }
-    else if (navigateTo) {
-      navigate(navigateTo); // Navigates to the specified route
+    if(navigateTo) {//switches screens
+      navigate(navigateTo);
     }
   };
 
