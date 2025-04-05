@@ -1,8 +1,5 @@
 import { useState } from 'react';
-import reactLogo from './assets/react.svg';
-import viteLogo from '/vite.svg';
 import './App.css';
-import { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link} from 'react-router-dom';
 
 //pages for navigation
@@ -14,7 +11,6 @@ import Profile from './pages/profile'
 
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
     <Router>
@@ -24,7 +20,8 @@ function App() {
         <Route path="/login" element={Login()} />
         <Route path="/home" element={Home()} />
         <Route path="/profile" element={Profile()} />
-        
+        <Route path="*" element={Welcome_screen()} />
+
       </Routes>
     </Router>
   )
