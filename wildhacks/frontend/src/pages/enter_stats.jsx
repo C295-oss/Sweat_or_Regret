@@ -3,16 +3,7 @@ import React, { useState } from "react";
 
 export default function Enter_stats() {
 
-    // return (
-    // <div className="flex min-h-screen flex-col items-center justify-center p-4">
-    //     <h1 className="text-4xl font-bold tracking-tight">Enter Stats</h1>
-
-        
-    //     <Button></Button>
-    // </div>
-    // );
-
-    //const [userName, setUserName] = useState("");
+    const [sex, setSex] = useState("");
     const [mileTime, setMileTime] = useState("");
     const [plankTime, setPlankTime] = useState("");
     const [burpees, setBurpees] = useState("");
@@ -25,40 +16,54 @@ export default function Enter_stats() {
     
 
     const handleSubmit = (e) => {
-    e.preventDefault();
+        if (e) e.preventDefault();
 
-    // Validate if passwords match
-    // if (passWord !== confirmPassword) {
-    //     setErrorMessage("Passwords do not match!");
-    //     return;
-    // }
+        if (
+            !sex ||
+            !mileTime ||
+            !plankTime ||
+            !burpees ||
+            !pushUps ||
+            !sitUps ||
+            !squats ||
+            !yardDash ||
+            !flexible
+          ) {
+            setErrorMessage("Please fill in all the fields.");
+            return false;
+          }
+        
+        setErrorMessage("");
 
-    // // Proceed with form submission (here we just log the values)
-    // console.log("Form submitted:", { userName, passWord });
-    setErrorMessage(""); // Clear error message if validation passes
+        console.log("All data:", {
+        sex, mileTime, plankTime, burpees, pushUps, sitUps, squats, yardDash, flexible
+        });
+        return true;
     };
     
 
     return (
         <div className="flex min-h-screen flex-col items-center justify-center p-4">
-          <h1 className="text-4xl font-bold tracking-tight">Enter Stats</h1>
-    
+          <h3 className="text-4xl font-bold tracking-tight">Enter Stats</h3>
+          <br/>
           <form onSubmit={handleSubmit}>
-            {/* <div className="input-container">
-              <label htmlFor="userName">Username:</label>
-              <input
-                type="text"
-                id="userName"
-                name="userName"
-                value={userName}
-                onChange={(e) => setUserName(e.target.value)}
-                placeholder="Enter your username"
-                required
-              />
-            </div> */}
-    
+          <div>
+            <label htmlFor="sex">Choose a sex:</label>
+                <select
+                    id="sex"
+                    name="sex"
+                    value={sex}
+                    onChange={(e) => setSex(e.target.value)}
+                    required
+                >
+                    <option value="" disabled>Select...</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                </select>
+            </div>
+            <br/>
             <div className="input-container">
-              <label htmlFor="mileTime">What is your best mile time?</label>
+              <label htmlFor="mileTime">What is your best mile time in seconds?</label>
               <input
                 type="number"
                 min="1"
@@ -72,7 +77,7 @@ export default function Enter_stats() {
             </div>
             <br/>
             <div className="input-container">
-              <label htmlFor="plankTime">What is your best plank time?</label>
+              <label htmlFor="plankTime">What is your best plank time in seconds?</label>
               <input
                 type="number"
                 min="1"
@@ -142,7 +147,7 @@ export default function Enter_stats() {
             </div>
             <br/>
             <div className="input-container">
-              <label htmlFor="yardDash">What is your best 40 yard dash time?</label>
+              <label htmlFor="yardDash">What is your best 40 yard dash time in seconds?</label>
               <input
                 type="number"
                 min="1"
@@ -174,7 +179,13 @@ export default function Enter_stats() {
     
             <br />
     
-            <input type="submit" value="Submit" />
+            <Button
+                      label="Submit"
+                      onClick={handleSubmit}
+                      navigateTo="/home"
+                      className="w-full"
+                      size="lg"
+                    />
           </form>
         </div>
       );
