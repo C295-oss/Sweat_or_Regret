@@ -20,6 +20,17 @@ export default function Home() {
 
   
   async function fetchData() {
+    // const response = await fetch("http://127.0.0.1:5001/getUserStats");
+    // console.log(response)
+    // const json = await response.json();
+
+    // console.log(json);
+
+    // setStrength(response.strength);
+    // setStamina(response.stamina);
+    // setAgility(response.agility);
+    // setWildcard(response.wildc/ard);
+
     const statsObj = {
       strength: strength,
       stamina: stamina,
@@ -32,7 +43,7 @@ export default function Home() {
       const statsParam = encodeURIComponent(JSON.stringify(statsObj));
         
       // Make the API call
-      const response = await fetch(`http://127.0.0.1:5001/getScenarioAndMoves/${statsParam}`);
+      const response = await fetch(`http://127.0.0.1:5001/getScenarioAndMoves/${statsParam}/${mainText}`);
         
       // Check response status before trying to parse JSON
       if (!response.ok) {
@@ -45,7 +56,7 @@ export default function Home() {
       console.log("API response:", json);
         
       // Update state with fetched data
-      if (json.scenario) setMainText(json.scenario);
+      if (json.scenario) setMainText(prev => prev + '\n\n\n' + json.scenario + '\n\n\n');
       if (json.moves) setOptions(json.moves);
       if (json.probability) setProbs(json.probability);
     }

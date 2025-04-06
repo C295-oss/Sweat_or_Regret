@@ -14,11 +14,13 @@ def after_request(response):
     response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
     return response
 
-def getScenario(scenario):
+def getScenario(scenario, prev):
     response = client.models.generate_content(
         model="gemini-2.0-flash", 
         contents=f"""
-            Think of yourself as a DM. Write a scenario involving {scenario}. 
+            Think of yourself as a DM. Write a scenario based on {scenario}. 
+            The scenario should follow along with what has already happened: {prev}.
+            If nothing is provided regarding what has previously happened, then start a new scenario.
             Describe the environment that the user is in briefly, as well as the scenario.
             Scenario should be semi-short.
             Do not describe the year, date, or environment. Should start by describing the environment briefly.
@@ -73,7 +75,7 @@ def getMoveRequirements(scenario, moves, categories):
             Important rules:
             1. You MUST provide exactly 4 options - no more, no less.
             2. Format your response as four integers separated by commas ONLY.
-            3. 0 is very easy, while 10 is extremely hard. 4 should be the average ability of a human.
+            3. 0 is very easy, while 10 is extremely hard. 6 should be the average ability of a human.
             4. Do not include any explanations, introductions, or additional text.
             
             Example format:
@@ -130,14 +132,14 @@ def main():
 
 
 # Example function call: http://127.0.0.1:5001/getScenarioAndMoves/[4,5,2,3]
-@app.route("/getScenarioAndMoves/<stats>")
-def getScenarioAndMoves(stats):
+@app.route("/getScenarioAndMoves/<stats>/<prev>")
+def getScenarioAndMoves(stats, prev):
     stats = [float(s) for s in stats if s.isdigit()]
 
     # get the scenario and actions
     categories = ["Strength", "Stamina/Endurance", "Agility/Speed", "Wildcard"]
     
-    scenario = getScenario("Zombie Apocolypse")
+    scenario = getScenario("Zombie Apocolypse", prev)
     moves = getPotentialMoves(scenario.text, categories)
     requirement = getMoveRequirements(scenario.text, moves, categories)
     probability = getProbabilities(stats, requirement)
@@ -198,7 +200,7 @@ endPoint: "/getUserStats
 def getUserStats():
     username = request.args.get("username")
     if not username:
-        return jsonify({"status": "400",}), 400
+        return jsonify({"status": "400", "message": "Not username."}), 400
     
     response = userConnection.get_user_stats(username)
 
@@ -236,6 +238,7 @@ def getUserProfile():
 
     if response:
         data = {"status": "200", "message": "User profile retrieved successfully.", "profile": response}
+        print(data)
         return jsonify(data), 200
     else:
         data = {"status": "400", "message": "User not found.", "data": None}
