@@ -97,7 +97,7 @@ export async function updateUserProfile(userData) {
 
     // send put request
     const response = await fetch(`${BASE_URL}/updateUserProfile`, {
-        method: 'PUT',
+        method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
