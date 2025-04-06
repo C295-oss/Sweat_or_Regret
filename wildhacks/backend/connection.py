@@ -1,5 +1,5 @@
 import sqlite3
-from datalayer import DataLayerMen, DataLayerWomen
+from datalayer import DataLayerMen, DataLayerWomen, UserLayer
 
 from character import Character
 
@@ -27,13 +27,24 @@ if __name__ == "__main__":
     menDict = DataLayerMen(conn)
     womenDict = DataLayerWomen(conn)
 
-    print("men endurance: ", menDict.getEndurance(600, 91,  35))
-    print("men strength: ", menDict.getStrength(17, 40, 40))
-    print("men agility: ", menDict.getAgility(600, 10))
+    # print("men endurance: ", menDict.getEndurance(600, 91,  35))
+    # print("men strength: ", menDict.getStrength(17, 40, 40))
+    # print("men agility: ", menDict.getAgility(600, 10))
+
+    user = UserLayer(conn)
+    created  =  user.create_user("testuser", "password123", "M", 600, 90, 30, 20, 25, 15, 40, 5)
+    print("User created:", created)
+    user_stats = user.get_user_stats("testuser")
+    print(user_stats)
+    user.update_user_stats("testuser", 300, 95, 35, 25, 30, 20, 45, 6)
+    user_stats = user.get_user_stats("testuser")
+    print(user_stats)
+    
 
 
-    character = Character()
-    menPush = menDict.get_pushup_Scale(50)
+
+    # character = Character()
+    # menPush = menDict.get_pushup_Scale(50)
 
     if conn:
         conn.close()

@@ -66,11 +66,18 @@ const Enter_stats = () => {
               <label htmlFor="mileTime">What is your best mile time in seconds?</label>
               <input
                 type="number"
+                inputMode="numeric"
+                pattern="[0-9]*"
                 min="1"
                 id="mileTime"
                 name="mileTime"
                 value={mileTime}
                 onChange={(e) => setMileTime(e.target.value)}
+                onKeyDown={(e) => {
+                    if (e.key === "e" || e.key === "E" || e.key === "+" || e.key === "-") {
+                        e.preventDefault();
+                    }
+                }}
                 placeholder="Enter your mile time."
                 required
               />
@@ -80,11 +87,18 @@ const Enter_stats = () => {
               <label htmlFor="plankTime">What is your best plank time in seconds?</label>
               <input
                 type="number"
+                inputMode="numeric"
+                pattern="[0-9]*"
                 min="1"
                 id="plankTime"
                 name="plankTime"
                 value={plankTime}
                 onChange={(e) => setPlankTime(e.target.value)}
+                onKeyDown={(e) => {
+                    if (e.key === "e" || e.key === "E" || e.key === "+" || e.key === "-") {
+                        e.preventDefault();
+                    }
+                }}
                 placeholder="Enter your plank time."
                 required
               />
@@ -94,11 +108,18 @@ const Enter_stats = () => {
               <label htmlFor="burpees">What is the max amount of burpees you can do?</label>
               <input
                 type="number"
+                inputMode="numeric"
+                pattern="[0-9]*"
                 min="1"
                 id="burpees"
                 name="burpees"
                 value={burpees}
                 onChange={(e) => setBurpees(e.target.value)}
+                onKeyDown={(e) => {
+                    if (e.key === "e" || e.key === "E" || e.key === "+" || e.key === "-") {
+                        e.preventDefault();
+                    }
+                }}
                 placeholder="Enter your max amount of burpees."
                 required
               />
@@ -108,11 +129,18 @@ const Enter_stats = () => {
               <label htmlFor="pushUps">What is the max amount of push ups you can do?</label>
               <input
                 type="number"
+                inputMode="numeric"
+                pattern="[0-9]*"
                 min="1"
                 id="pushUps"
                 name="pushUps"
                 value={pushUps}
                 onChange={(e) => setPushUps(e.target.value)}
+                onKeyDown={(e) => {
+                    if (e.key === "e" || e.key === "E" || e.key === "+" || e.key === "-") {
+                        e.preventDefault();
+                    }
+                }}
                 placeholder="Enter your max amount of push ups."
                 required
               />
@@ -122,11 +150,18 @@ const Enter_stats = () => {
               <label htmlFor="sitUps">What is the max amount of sit ups you can do?</label>
               <input
                 type="number"
+                inputMode="numeric"
+                pattern="[0-9]*"
                 min="1"
                 id="sitUps"
                 name="sitUps"
                 value={sitUps}
                 onChange={(e) => setSitUps(e.target.value)}
+                onKeyDown={(e) => {
+                    if (e.key === "e" || e.key === "E" || e.key === "+" || e.key === "-") {
+                        e.preventDefault();
+                    }
+                }}
                 placeholder="Enter your max amount of sit ups."
                 required
               />
@@ -136,11 +171,18 @@ const Enter_stats = () => {
               <label htmlFor="squats">What is the max amount of squats you can do?</label>
               <input
                 type="number"
+                inputMode="numeric"
+                pattern="[0-9]*"
                 min="1"
                 id="squats"
                 name="squats"
                 value={squats}
                 onChange={(e) => setSquats(e.target.value)}
+                onKeyDown={(e) => {
+                    if (e.key === "e" || e.key === "E" || e.key === "+" || e.key === "-") {
+                        e.preventDefault();
+                    }
+                }}
                 placeholder="Enter you max amount of squats."
                 required
               />
@@ -150,11 +192,18 @@ const Enter_stats = () => {
               <label htmlFor="yardDash">What is your best 40 yard dash time in seconds?</label>
               <input
                 type="number"
+                inputMode="numeric"
+                pattern="[0-9]*"
                 min="1"
                 id="yardDash"
                 name="yardDash"
                 value={yardDash}
                 onChange={(e) => setYardDash(e.target.value)}
+                onKeyDown={(e) => {
+                    if (e.key === "e" || e.key === "E" || e.key === "+" || e.key === "-") {
+                        e.preventDefault();
+                    }
+                }}
                 placeholder="Enter your best 40 yard dash time."
                 required
               />
@@ -164,12 +213,19 @@ const Enter_stats = () => {
               <label htmlFor="flexible">How flexible are you on a scale from 1 - 10?</label>
               <input
                 type="number"
+                inputMode="numeric"
+                pattern="[0-9]*"
                 min="1"
                 max="10"
                 id="flexible"
                 name="flexible"
                 value={flexible}
                 onChange={(e) => setFlexible(e.target.value)}
+                onKeyDown={(e) => {
+                    if (e.key === "e" || e.key === "E" || e.key === "+" || e.key === "-") {
+                        e.preventDefault();
+                    }
+                }}
                 placeholder="Enter your flexiblity."
                 required
               />
