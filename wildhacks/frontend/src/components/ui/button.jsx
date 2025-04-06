@@ -5,10 +5,10 @@ export default function Button({ label, navigateTo, onClick, type = "button", cl
 
 
   const handleClick = () => {
-    if (onClick) {// Calls the passed onClick function if provided
-      onClick(onClick); 
-    }
-    if(navigateTo) {//switches screens
+    const shouldNavigate = onClick ? onClick() : true;
+
+    // Only navigate if onClick returned true (or if there's no onClick)
+    if (shouldNavigate && navigateTo) {
       navigate(navigateTo);
     }
   };

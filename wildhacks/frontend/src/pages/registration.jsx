@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Button from '../components/ui/button';
 import "./registration.css";
 
 export default function Registration() {
@@ -7,31 +8,27 @@ export default function Registration() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    // Validate if passwords match
+  const handleFormSubmit = () => {
     if (passWord !== confirmPassword) {
       setErrorMessage("Passwords do not match!");
-      return;
+      return false;
     }
 
-    // Proceed with form submission (here we just log the values)
+    setErrorMessage("");
     console.log("Form submitted:", { userName, passWord });
-    setErrorMessage(""); // Clear error message if validation passes
+    return true;
   };
 
   return (
     <div className="registration">
       <h1>Registration</h1>
 
-      <form onSubmit={handleSubmit}>
+      <form>
         <div className="input-container">
           <label htmlFor="userName">Username:</label>
           <input
             type="text"
             id="userName"
-            name="userName"
             value={userName}
             onChange={(e) => setUserName(e.target.value)}
             placeholder="Enter your username"
@@ -44,7 +41,6 @@ export default function Registration() {
           <input
             type="password"
             id="passWord"
-            name="passWord"
             value={passWord}
             onChange={(e) => setPassWord(e.target.value)}
             placeholder="Enter your password"
@@ -57,7 +53,6 @@ export default function Registration() {
           <input
             type="password"
             id="confirmPassword"
-            name="confirmPassword"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             placeholder="Confirm your password"
@@ -69,7 +64,13 @@ export default function Registration() {
 
         <br />
 
-        <input type="submit" value="Submit" />
+        <Button
+          label="Submit"
+          onClick={handleFormSubmit}
+          navigateTo="/enter_stats"
+          className="w-full"
+          size="lg"
+        />
       </form>
     </div>
   );
