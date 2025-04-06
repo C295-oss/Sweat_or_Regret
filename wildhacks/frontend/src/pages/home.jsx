@@ -12,9 +12,16 @@ export default function Home() {
     { id: 6, text: 'Option 6 Details' }
   ];
 
-  const strength = 5;
-  const stamina = 5;
-  const agility = 5;
+  const [strength, setStrength] = useState(5);
+  const [stamina, setStamina] = useState(5);
+  const [agility, setAgility] = useState(5);
+
+  const stats = [
+    {id: 1, text: "Strength", value: strength},
+    {id: 2, text: "Stamina", value: stamina},
+    {id: 3, text: "Agility", value: agility},
+  ];
+
 
   const handleOptionClick = (text) => {
     setMainText(text);
@@ -22,8 +29,35 @@ export default function Home() {
 
   return (
     <div className="flex w-screen h-screen p-2 bg-zinc-800">   
+      <div className="grid grid-cols-2 gap-4 w-1/2">
+        {stats.map((stat) => (
+          <div 
+            key={stat.id} 
+            className="text-7xl bg-zinc-700 border-2 border-violet-600 rounded-lg p-4 text-center transition-all duration-200 hover:bg-zinc-600 hover:-translate-y-1"
+          >
+            <p className="text-violet-300 text-sm font-semibold uppercase tracking-wider">
+              {stat.text}
+            </p>
+            <h1 className="font-bold text-9xl my-1 text-white">
+              {stat.value}
+            </h1>
+          </div>
+        ))}
+
+        <div className="grid grid-rows-2 gap-4 text-white font-bold">
+          <button>
+            Don't forget to touch grass!!!
+          </button>
+
+          <button>
+            test
+          </button>
+        </div>
+
+      </div>
+      
       {/* Stats */}
-      <div className="w-1/2">
+      {/* <div className="w-1/2">
           
         <h1 className="text-white font-bold">Sweat or Regret</h1>
 
@@ -35,7 +69,7 @@ export default function Home() {
           <p>Agility/Speed: {agility}</p>
         </div>
 
-      </div>
+      </div> */}
 
       <div className="w-3/5 p-4">
         <div className="rounded-2xl w-full h-3/4 text-white p-4 bg-zinc-900 ">
