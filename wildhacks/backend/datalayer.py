@@ -472,6 +472,7 @@ class UserLayer:
     
 
     def get_user_stats(self,  username):
+        print("get the user stats in the data layer")
         
         user_profile = self.get_user_profile(username)
         if user_profile is None:

@@ -117,7 +117,7 @@ def getMoveResult(scenario, action, player_death:bool, is_success:bool):
 
 def getProbabilities(stats, requirements):
     probs = []
-    for i in range(0,4):
+    for i in range(0,3):
         if stats[i] >= requirements[i]:
             probs.append(1.0)
         else:
@@ -178,15 +178,28 @@ def createUser():
     data = request.get_json()
     if not data:
         return jsonify({"error": "No data provided"}), 400
-    
-    response = userConnection.create_user(data["username"], data["password"], data["sex"], data["miletime"], data["plankTime"], data["burpees"], data["pushups"], data["situps"], data["squats"], data["fourtyYdDash"], data["flexibility"])
+    try:
+        response = userConnection.create_user(data["username"], data["password"], data["sex"], data["miletime"], data["plankTime"], data["burpees"], data["pushups"], data["situps"], data["squats"], data["fourtyYdDash"], data["flexibility"])
+    except Exception as e:
+        print("Error creating user:", e)
+        return jsonify({"status": "500", "message": "Internal server error."}), 500
+
+    print("response:", response)
 
     if response:
         data = {"status": "200", "message": "User created successfully."}
+        print("data", data)
         return jsonify(data), 200
     else:
-        data = {"status": "400", "message": "User creation failed."}
+        data = {"status": "400", "message": "User creation failed ."}
+        print("data", data)
         return jsonify(data), 400
+
+
+
+
+
+
 
 
 """
@@ -196,13 +209,17 @@ Parameters:
 endPoint: "/getUserStats
 
 """
-@app.route("/getUserStats", methods=["GET"])
+@app.route("/getUserStats", methods=["POST"])
 def getUserStats():
-    username = request.args.get("username")
-    if not username:
-        return jsonify({"status": "400", "message": "Not username."}), 400
+    print("Start of get user stats")
+    data = request.get_json()
+    if not data:
+        return jsonify({"status": "400",}), 400
+    # username = data["username"]
+    # if not username:
+    #     return jsonify({"status": "400", "message": "Not username."}), 400
     
-    response = userConnection.get_user_stats(username)
+    response = userConnection.get_user_stats(data["username"])
 
     if response is None:
         return jsonify({"status": "400", "message": "User not found."}), 400
@@ -216,6 +233,36 @@ def getUserStats():
         return jsonify(data), 400
     
 
+"""
+Parameters:
+- username: str
+
+endPoint: "/userExists
+
+"""
+@app.route("/userExists", methods=["POST"])
+def getUser():
+    data = request.get_json()
+    
+    if not data:
+        return jsonify({"status": "400",}), 400
+    
+    username = data["username"]
+
+    print("username:", username)
+    response = userConnection.user_exists(data["username"])
+
+    if response is None:
+        return jsonify({"status": "400", "message": "User not found."}), 400
+    
+
+    if response:
+        data = {"status": "200", "message": "Username exists", "exists": True}
+        return jsonify(data), 200
+    else: 
+        data = {"status": "400", "message": "User not found.", "exists": False}
+        return jsonify(data), 400
+    
 
 """
 Parameters:
@@ -226,9 +273,9 @@ endPoint: "/getUserProfile
 """
 @app.route("/getUserProfile", methods=["GET"])
 def getUserProfile():
-    username = request.args.get("username")
+    username = request.get_json("username")
     if not username:
-        return jsonify({"status": "400", "message": "username not found"}), 400
+        return jsonify({"status": "400", "message": "username not found", "test": username}), 400
     
     response = userConnection.get_user_profile(username)
 
@@ -268,12 +315,14 @@ def updateUserStats():
     if not data:
         return jsonify({"error": "No data provided"}), 400
     
-    response = userConnection.update_user_stats(data["username"], data["miletime"], data["planktime"], data["burpees"], data["pushups"], data["situps"], data["squats"], data["fourtyYdDash"], data["flexibility"])
+    response = userConnection.update_user_stats(data["username"], data["miletime"], data["plankTime"], data["burpees"], data["pushups"], data["situps"], data["squats"], data["fourtyYdDash"], data["flexibility"])
 
     stats = userConnection.get_user_stats(data["username"])
+    profile = userConnection.get_user_profile(data["username"])
+    
 
     if response:
-        data = {"status": "200", "message": "User stats updated successfully.", "stats": stats}
+        data = {"status": "200", "message": "User stats updated successfully.","profile": profile,  "stats": stats}
         return jsonify(data), 200
     else:
         data = {"status": "400", "message": "User stats update failed."}
@@ -294,19 +343,21 @@ def login():
     if not data:
         return jsonify({"error": "No data provided"}), 400
     
-    print("data:", data)
+    print("data at begin:", data)
     response = userConnection.valid_user(data["username"], data["password"])
 
     profile = userConnection.get_user_profile(data["username"])
     stats = userConnection.get_user_stats(data["username"])
-
+    print("response on server for verify:", response)
     if response:
         data = {"status": "200", "message": "User logged in successfully.", "profile": profile, "stats": stats}
-        print(data)
+        print("data: ", data)
+        print("response: ", response)
         return jsonify(data), 200
     else:
         data = {"status": "400", "message": "User login failed."}
-        print(data)
+        print("data: ", data)
+        print("response: ", response)
         return jsonify(data), 400
 
     

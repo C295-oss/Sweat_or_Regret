@@ -46,6 +46,7 @@ export default function Login() {
       else{
         localStorage.setItem("local_username", user);
         localStorage.setItem("local_password", pass);
+      
         localStorage.setItem("profile", response.profile);
         localStorage.setItem("stats", response.stats);
 				localStorage.setItem("verify", true);
