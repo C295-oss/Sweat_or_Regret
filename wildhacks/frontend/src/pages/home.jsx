@@ -150,19 +150,19 @@ export default function Home() {
         </div>
 
         <button className="w-full bg-violet-600 hover:bg-violet-700 text-white font-bold py-3 rounded-lg mt-6 transition-all duration-200 shadow-lg">
-          20 Minute jog for stamina boost!
+          Zombie Apocalypse
         </button>
 
         <button className="w-full bg-violet-600 hover:bg-violet-700 text-white font-bold py-3 rounded-lg mt-6 transition-all duration-200 shadow-lg">
-          20 push-ups for a strength boost!
+          Jungle Escape
         </button>
 
         <button className="w-full bg-violet-600 hover:bg-violet-700 text-white font-bold py-3 rounded-lg mt-6 transition-all duration-200 shadow-lg">
-          10 minutes of stretches for agility boost!
+          Prison Break
         </button>
         
         <button className="w-full bg-violet-600 hover:bg-violet-700 text-white font-bold py-3 rounded-lg mt-6 transition-all duration-200 shadow-lg">
-          Wildcard!
+          Train Heist
         </button>
         
       </div>
