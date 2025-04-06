@@ -1,7 +1,7 @@
 import Button from "../components/ui/button";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
-export default function Enter_stats() {
+const Enter_stats = () => {
 
     const [sex, setSex] = useState("");
     const [mileTime, setMileTime] = useState("");
@@ -13,7 +13,6 @@ export default function Enter_stats() {
     const [yardDash, setYardDash] = useState("");
     const [flexible, setFlexible] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
-    
 
     const handleSubmit = (e) => {
         if (e) e.preventDefault();
@@ -44,6 +43,7 @@ export default function Enter_stats() {
 
     return (
         <div className="flex min-h-screen flex-col items-center justify-center p-4">
+
           <h3 className="text-4xl font-bold tracking-tight">Enter Stats</h3>
           <br/>
           <form onSubmit={handleSubmit}>
@@ -191,3 +191,5 @@ export default function Enter_stats() {
       );
 
 };
+
+export default Enter_stats;
