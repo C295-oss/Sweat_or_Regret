@@ -1,7 +1,6 @@
 import Button from "../components/ui/button";
 import React, { useState, useEffect } from "react";
-import UserAPI from "../api/userApi";
-import { register } from "../api/userApi.jsx";
+import { register, userExists, updateUserProfile } from "../api/userApi.jsx";
 import { useNavigate } from "react-router-dom";
 import "./enter_stats.css";
 
@@ -18,6 +17,64 @@ const Enter_stats = () => {
     const [yardDash, setYardDash] = useState("");
     const [flexible, setFlexible] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
+
+
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            const username = localStorage.getItem("local_username");
+            const password = localStorage.getItem("local_password");
+            if (!username || !password) {
+                navigate("/login");
+                return;
+            }
+            const userHere = await userExists(username);
+            console.log("use effect username:", userHere);
+
+        if(userHere.status == 200) {
+          const profile = JSON.parse(localStorage.getItem("profile"));
+          console.log("profile:", profile);
+          setSex(profile.sex);
+          setMileTime(profile.miletime);
+          setPlankTime(profile.plank);
+          setBurpees(profile.burpees);
+          setPushUps(profile.pushups);
+          setSitUps(profile.situps);
+          setSquats(profile.squat);
+          setYardDash(profile.fourtyYdDash);
+          setFlexible(profile.flexibility);
+          console.log("user exists pass:", userHere);
+        } else {
+            // User does not exist, redirect to login page  
+            // console.log("user exists fail:", userHere);
+            alert("User does not exist. Please register first.");
+            localStorage.removeItem("local_username");
+            localStorage.removeItem("local_password");
+            localStorage.removeItem("profile");
+            localStorage.removeItem("stats");
+            localStorage.removeItem("verify");
+            setErrorMessage("User does not exist. Please register first.");
+            setSex("");
+            setMileTime("");
+            setPlankTime("");
+            setBurpees("");
+            setPushUps("");
+            setSitUps("");
+            setSquats("");
+            setYardDash("");
+            setFlexible("");
+            setErrorMessage("");
+            navigate("/login");
+            return;
+
+        }
+
+
+
+
+        }
+        fetchUser();
+    }, []);
 
     const handleSubmit = async (e) => {
         if (e) e.preventDefault();
@@ -39,9 +96,10 @@ const Enter_stats = () => {
         
         setErrorMessage("");
 
-        console.log("All data:", {
-        sex, mileTime, plankTime, burpees, pushUps, sitUps, squats, yardDash, flexible
-        });
+        // console.log("All data:", {
+        // sex, mileTime, plankTime, burpees, pushUps, sitUps, squats, yardDash, flexible
+        // });
+
         try {
           // - username: str
           // - password: str
@@ -69,32 +127,80 @@ const Enter_stats = () => {
               flexibility: flexible
             }
 
-            const response = await register(profile)
-            console.log("Response:", response);
-            
-            if(response.status != 200) {
-              console.log("Response:", response.message);
-                throw new Error("Failed to register user.");
- 
+            if(!profile.username || !profile.password) {
+                alert("Please register first.");
+                return;
             }
+            const response = await userExists(profile.username);
+            // if urer already exists
+            if(response.status == 200) {
+              const profile = {
+                username: localStorage.getItem("temp_username"),
+                miletime: mileTime,
+                plankTime: plankTime,
+                burpees: burpees,
+                pushups: pushUps,
+                situps: sitUps,
+                squats: squats,
+                fourtyYdDash: yardDash,
+                flexibility: flexible
+              }
+              const response = await updateUserProfile(profile);
+              if(response.status != 200) {
+                console.log("Response:", response.message);
+                throw new Error("Failed to update user profile.");
+              }
+              else{
+                const profile = response.profile;
+                console.log("profile after update:", profile);
+                  const newProfile = {
+                    mileTime: profile.miletime,
+                    plankTime: profile.plankTime,
+                    burpees: profile.burpees,
+                    pushUps: profile.pushups,
+                    sitUps: profile.situps,
+                    squats: profile.squats,
+                    yardDash: profile.fourtyYdDash,
+                    flexibility: profile.flexibility,
+                  }
+
+                localStorage.setItem("profile", JSON.stringify(newProfile));
+                console.log("User profile updated successfully.");
+                console.log("Response:", response.message);
+                navigate("/home")
+              }
+
+            }
+            // if user does not exist
             else{
-                console.log("User registered successfully.");console.log("Response:", response.message);
-                navigate("/login")
-                // localStorage.setItem("verify", "true");
-
-                
-                
+              const response = await register(profile)
+              if(localStorage.getItem("local_username") && localStorage.getItem("local_password")) {
+            
+                console.log("Response:", response);
+                if(response.status != 200) {
+                  console.log("Response:", response.message);
+                  throw new Error("Failed to register user.");
+    
+                }
+                else{
+                  console.log("User registered successfully.");console.log("Response:", response.message);
+                  navigate("/login")
+                }
+              }
             }
-
-
-
-        } catch(error) {
+          } catch{
+            console.error("Error:", error);
+            setErrorMessage("An error occurred. Please try again.");
             alert(error.message);
-        }
-
-        
+          }  
         return true;
     };
+
+
+    
+
+
+    
     
 
     return (
@@ -301,7 +407,6 @@ const Enter_stats = () => {
           </form>
         </div>
       );
-
-};
+    }
 
 export default Enter_stats;

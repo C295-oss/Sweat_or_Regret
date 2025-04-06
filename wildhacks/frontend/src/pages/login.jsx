@@ -46,10 +46,11 @@ export default function Login() {
       else{
         localStorage.setItem("local_username", user);
         localStorage.setItem("local_password", pass);
+        
       
-        localStorage.setItem("profile", response.profile);
-        localStorage.setItem("stats", response.stats);
-				// localStorage.setItem("verify", true);
+        localStorage.setItem("profile", JSON.stringify(response.profile));
+        localStorage.setItem("stats", JSON.stringify(response.stats));
+        localStorage.setItem("verify", true); // Uncommenting this line to store verification status
         navigate("/home");
       }
       // Handle successful login (e.g., redirect to home page)
