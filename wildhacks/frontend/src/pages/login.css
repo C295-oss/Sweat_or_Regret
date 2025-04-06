@@ -1,4 +1,11 @@
 .no-bullets {
-    list-style-type: none; /* Removes the bullet points */
-    padding-left: 0; /* Removes default padding */
+    list-style-type: none;
+    align-self: center;
+    
   }
+
+.button {
+    background-color: black;
+    margin: 10px;
+    color: white;
+}
