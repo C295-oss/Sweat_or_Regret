@@ -2,6 +2,7 @@ import Button from "../components/ui/button";
 import React, { useState, useEffect } from "react";
 import { register } from "../api/userApi.jsx";
 import { useNavigate } from "react-router-dom";
+import "./enter_stats.css"
 
 const Enter_stats = () => {
 
