@@ -1,0 +1,33 @@
+from flask import Flask, request, jsonify
+from datalayer import UserLayer
+import sqlite3
+
+app = Flask(__name__)
+
+# Initialize database connection
+db_connection = sqlite3.connect("database.db", check_same_thread=False)
+user_layer = UserLayer(db_connection)
+
+@app.route('/api/create_user', methods=['POST'])
+def create_user():
+    data = request.json
+    username = data.get("username")
+    password = data.get("password")
+    sex = data.get("sex")
+    miletime = data.get("miletime")
+    plankTime = data.get("plankTime")
+    burpees = data.get("burpees")
+    pushups = data.get("pushups")
+    situps = data.get("situps")
+    squat = data.get("squat")
+    fourtyYdDash = data.get("fourtyYdDash")
+    flexibility = data.get("flexibility")
+
+    success = user_layer.create_user(username, password, sex, miletime, plankTime, burpees, pushups, situps, squat, fourtyYdDash, flexibility)
+    if success:
+        return jsonify({"message": "User created successfully"}), 201
+    else:
+        return jsonify({"message": "User already exists or an error occurred"}), 400
+
+if __name__ == '__main__':
+    app.run(debug=True)

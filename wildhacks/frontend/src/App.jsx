@@ -11,7 +11,7 @@ import Profile from './pages/profile'
 import Enter_stats from './pages/enter_stats';
 
 function verify_log_in() {
-  if (localStorage.getItem('local_user_name') === null || localStorage.getItem("local_password" === null)) {
+  if (localStorage.getItem('local_user_name') == null || localStorage.getItem("local_password" == null)) {
     return (false); 
   }
   return (true);
