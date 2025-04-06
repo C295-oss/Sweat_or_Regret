@@ -57,7 +57,7 @@ const Enter_stats = () => {
 
             }
 
-            const response = await register
+            // const response = await register
             const response = await UserAPI.createUser({sex:sex,username:localStorage.getItem("temp_username"),password:localStorage.getItem("temp_password"),miletime:mileTime,planktime:plankTime,burpees:burpees,pushups:pushUps,situps:sitUps,squat:squats,fourtyYdDash:yardDash,flexiblity:flexible})
 
         } catch(error) {
@@ -72,7 +72,7 @@ const Enter_stats = () => {
     return (
         <div className="flex w-380 h-350 flex-col items-center justify-center p-2 bg-zinc-800">
 
-          <h3 className="enter-stats-header">Enter Stats</h3>
+          <h1 className="enter-stats-header">Enter Stats</h1>
           <br/>
           <form onSubmit={handleSubmit}>
           <div>
