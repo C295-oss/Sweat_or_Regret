@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import React from "react";
 import './profile.css'
+import profilePicture from "../assets/profile-user.png";
 
 export default function Profile() {
 
@@ -16,14 +17,14 @@ export default function Profile() {
   });
  
   return (
-    <div className="flex w-380 h-300 flex-col items-center justify-center p-2 bg-zinc-800">
+    <div className="flex w-screen h-screen flex-col items-center justify-center p-2 bg-zinc-800">
 
       {/* Navbar: */}
       <div className="profile-header"></div>
 
       <img
         className="profile-picture"
-        src="frontend/src/assets/profile-user.png" // Replace with actual profile picture URL
+        src={profilePicture} // Replace with actual profile picture URL
         alt="Profile"
       />
       <h1 className="profile-title">My Profile</h1>
