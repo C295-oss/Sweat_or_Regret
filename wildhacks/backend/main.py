@@ -5,15 +5,20 @@ from google import genai
 client = genai.Client(api_key="AIzaSyDmuCdB-kdSp3zjJXy5kK-AwORJ3FKa9xg")
 app = Flask(__name__)
 
+@app.after_request
+def after_request(response):
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
+    return response
 
 def getScenario(scenario):
     response = client.models.generate_content(
         model="gemini-2.0-flash", 
         contents=f"""
             Think of yourself as a DM. Write a scenario involving {scenario}. 
-            Describe the enviornment that the user is in briefly, as well as the scenario.
+            Describe the environment that the user is in briefly, as well as the scenario.
             Scenario should be semi-short.
-            Do not describe the year, date, or enviornment. Should start by describing the enviornment briefly.
+            Do not describe the year, date, or environment. Should start by describing the environment briefly.
             Do not add any other text unless it pertains to the scenario. Ex "Ok, here's your prompt:"
             Provide 4 options the user could take.
         """
@@ -134,14 +139,15 @@ def getScenarioAndMoves(stats):
     requirement = getMoveRequirements(scenario.text, moves, categories)
     probability = getProbabilities(stats, requirement)
 
-    return {"scenario":scenario.text, "moves":moves, "probability": probability}
+    # Switched to json. Originally a dictionary
+    return {"scenario":scenario.text, "moves":moves, "probability": probability};
 
 
 @app.route("/getResult/<scenario>/<action>/<death>/<success>")
 def getActionResult(scenario, action, death, success):
     result = getMoveResult(scenario, action, death, success)
 
-    return result.text
+    return {"result": result.text}
 
 
 if __name__ == "__main__":
