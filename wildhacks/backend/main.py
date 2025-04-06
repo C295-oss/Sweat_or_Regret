@@ -1,10 +1,8 @@
 from flask import Flask 
 from google import genai
-import sqlite3 as sql
-import random
 
 
-client = genai.Client(api_key="AIzaSyCkMunEJLQTp4-yqZ-WRwdWxUuq1TqjJmc")
+client = genai.Client(api_key="AIzaSyDmuCdB-kdSp3zjJXy5kK-AwORJ3FKa9xg")
 app = Flask(__name__)
 
 
@@ -129,7 +127,7 @@ def getScenarioAndMoves(stats):
     stats = [float(s) for s in stats if s.isdigit()]
 
     # get the scenario and actions
-    categories = ["Strength", "Stamina/Endurance", "agility/speed", "Wildcard"]
+    categories = ["Strength", "Stamina/Endurance", "Agility/Speed", "Wildcard"]
     
     scenario = getScenario("Zombie Apocolypse")
     moves = getPotentialMoves(scenario.text, categories)
