@@ -9,3 +9,6 @@ npm install tailwindcss @tailwindcss/viteeeee
 
 # username: testUser
 # password: password123
+
+go to inspect, 
+got to
