@@ -13,9 +13,20 @@ export default function Registration() {
       setErrorMessage("Passwords do not match!");
       return false;
     }
+    else if (passWord === null || passWord === "") {
+      setErrorMessage("Invalid password")
+      return false;
+    }
+    else if (userName === null || userName === "") {
+      setErrorMessage("Invalid Username")
+      return false;
+    }
 
+    localStorage.setItem('local_user_name',userName);
+    localStorage.setItem('local_password',passWord);
     setErrorMessage("");
     console.log("Form submitted:", { userName, passWord });
+
     return true;
   };
 
@@ -65,7 +76,7 @@ export default function Registration() {
         <br />
 
         <Button
-          label="Submit"
+          label="Next"
           onClick={handleFormSubmit}
           navigateTo="/enter_stats"
           className="w-full"
