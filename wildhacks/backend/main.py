@@ -117,7 +117,8 @@ def getMoveResult(scenario, action, player_death:bool, is_success:bool):
 
 def getProbabilities(stats, requirements):
     probs = []
-    for i in range(0,3):
+    for i in range(0,4):
+        print(f"{stats[i]} - {requirements[i]}")
         if stats[i] >= requirements[i]:
             probs.append(1.0)
         else:

@@ -1,5 +1,5 @@
 import Button from "../components/ui/button.jsx";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { login } from "../api/userApi.jsx";
 import { useNavigate } from "react-router-dom";
 
@@ -49,7 +49,7 @@ export default function Login() {
       
         localStorage.setItem("profile", response.profile);
         localStorage.setItem("stats", response.stats);
-				localStorage.setItem("verify", true);
+				// localStorage.setItem("verify", true);
         navigate("/home");
       }
       // Handle successful login (e.g., redirect to home page)

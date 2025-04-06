@@ -1,12 +1,14 @@
+import { getUserStats } from '../api/userApi'
 import { useEffect, useState } from 'react';
 import { Link } from "react-router";
+import './home.css'
 
 export default function Home() {
   const [mainText, setMainText] = useState('Loading...');
-  const [strength, setStrength] = useState(5);
-  const [stamina, setStamina] = useState(5);
-  const [agility, setAgility] = useState(5);
-  const [wildcard, setWildcard] = useState(5);
+  const [strength, setStrength] = useState(4);
+  const [stamina, setStamina] = useState(4);
+  const [agility, setAgility] = useState(4);
+  const [wildcard, setWildcard] = useState(4);
 
   
   const [options, setOptions] = useState([
@@ -18,32 +20,40 @@ export default function Home() {
 
   const [probs, setProbs] = useState([0.0, 0.0, 0.0, 0.0]);
 
+  useEffect(() => {
+    const fetchUserStats = async () => {
+      try {
+        const response = await getUserStats(localStorage.getItem('local_username'));
+        console.log("response from server front end stats:", response);
   
-  async function fetchData() {
-    // const response = await fetch("http://127.0.0.1:5001/getUserStats");
-    // console.log(response)
-    // const json = await response.json();
-
-    // console.log(json);
-
-    // setStrength(response.strength);
-    // setStamina(response.stamina);
-    // setAgility(response.agility);
-    // setWildcard(response.wildc/ard);
-
-    const statsObj = {
-      strength: strength,
-      stamina: stamina,
-      agility: agility,
-      wildcard: wildcard
+        setStrength(response.stats.Strength);
+        setStamina(response.stats.Endurance);
+        setAgility(response.stats.Agility);
+        setWildcard(5);
+      } catch (err) {
+        console.error("Error fetching user stats:", err.message);
+      }
     };
+  
+    fetchUserStats();
+  }, []);
+  
+
+  async function fetchData() {
+    const statsObj = [
+      strength,
+      stamina,
+      agility,
+      wildcard
+    ]
 
     try {
       
-      const statsParam = encodeURIComponent(JSON.stringify(statsObj));
+      // const statsParam = encodeURIComponent(JSON.stringify(statsObj));
+      // const statsParam = statsObj.values;
         
       // Make the API call
-      const response = await fetch(`http://127.0.0.1:5001/getScenarioAndMoves/${statsParam}/${mainText}`);
+      const response = await fetch(`http://127.0.0.1:5001/getScenarioAndMoves/${statsObj}/${mainText}`);
         
       // Check response status before trying to parse JSON
       if (!response.ok) {
@@ -138,6 +148,23 @@ export default function Home() {
             </div>
           ))}
         </div>
+
+        <button className="w-full bg-violet-600 hover:bg-violet-700 text-white font-bold py-3 rounded-lg mt-6 transition-all duration-200 shadow-lg">
+          20 Minute jog for stamina boost!
+        </button>
+
+        <button className="w-full bg-violet-600 hover:bg-violet-700 text-white font-bold py-3 rounded-lg mt-6 transition-all duration-200 shadow-lg">
+          20 push-ups for a strength boost!
+        </button>
+
+        <button className="w-full bg-violet-600 hover:bg-violet-700 text-white font-bold py-3 rounded-lg mt-6 transition-all duration-200 shadow-lg">
+          10 minutes of stretches for agility boost!
+        </button>
+        
+        <button className="w-full bg-violet-600 hover:bg-violet-700 text-white font-bold py-3 rounded-lg mt-6 transition-all duration-200 shadow-lg">
+          Wildcard!
+        </button>
+        
       </div>
 
       {/* Scenario and Options Section */}

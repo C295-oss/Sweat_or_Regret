@@ -8,16 +8,16 @@ export default function WelcomePage() {
 
   const already_logged_in = () => {
     try {
-        if(localStorage.getItem('verify') != "true") {
-          console.log("huh?")
-          navigate("/login");
-          return;
-        }
+        // if(localStorage.getItem('verify') != "true") {
+        //   console.log("huh?")
+        //   navigate("/login");
+        //   return;
+        // }
         console.log("what?")
         navigate("/home");
         return;
       }
-      catch(error) {
+      catch {
         console.log("lool?")
         navigate("/login");
         return;

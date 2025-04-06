@@ -198,33 +198,35 @@ export async function updateUserProfile(userData) {
  * @param token - The unique token user will have to confirm identiy
  * @returns the response body from the server
  */
-        export async function getUserStats(Username){
+    export async function getUserStats(Username){
 
-            const bodySent = {
-              username: Username
-            };
-            // console.log("Token being sent:", Token);
-          
-            // send put request
-            const response = await fetch(`${BASE_URL}/getUserStats`, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify(bodySent), 
-            }); // send the token in the request body
-          
-            
-          
-            const data = await response.json(); 
-            console.log("Response of server: ", data);
-            data.status = Number(data.status);
-            
-            console.log("response user: ", data);
-          
-            console.log("response message: ",data.message); 
-          
-            return data;
-        }
+        const bodySent = {
+          username: Username
+        };
+
+        console.log("username for getUserStat api:", Username);
+        // console.log("Token being sent:", Token);
+      
+        // send put request
+        const response = await fetch(`${BASE_URL}/getUserStats`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(bodySent), 
+        }); // send the token in the request body
+      
+        
+      
+        const data = await response.json(); 
+        console.log("Response of server in api: ", data);
+        data.status = Number(data.status);
+        
+        console.log("response user: ", data);
+      
+        console.log("response message: ",data.message); 
+      
+        return data;
+    }
 
     
