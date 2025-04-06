@@ -207,13 +207,13 @@ Parameters:
 endPoint: "/getUserStats
 
 """
-@app.route("/getUserStats", methods=["GET"])
+@app.route("/getUserStats", methods=["POST"])
 def getUserStats():
-    username = request.get_json("username")
-    if not username:
+    data = request.get_json("username")
+    if not data:
         return jsonify({"status": "400",}), 400
     
-    response = userConnection.get_user_stats(username)
+    response = userConnection.get_user_stats(data["username"])
 
     if response is None:
         return jsonify({"status": "400", "message": "User not found."}), 400
@@ -267,7 +267,7 @@ endPoint: "/getUserProfile
 """
 @app.route("/getUserProfile", methods=["GET"])
 def getUserProfile():
-    username = request.args.get("username")
+    username = request.get_json("username")
     if not username:
         return jsonify({"status": "400", "message": "username not found"}), 400
     
@@ -308,12 +308,14 @@ def updateUserStats():
     if not data:
         return jsonify({"error": "No data provided"}), 400
     
-    response = userConnection.update_user_stats(data["username"], data["miletime"], data["planktime"], data["burpees"], data["pushups"], data["situps"], data["squats"], data["fourtyYdDash"], data["flexibility"])
+    response = userConnection.update_user_stats(data["username"], data["miletime"], data["plankTime"], data["burpees"], data["pushups"], data["situps"], data["squats"], data["fourtyYdDash"], data["flexibility"])
 
     stats = userConnection.get_user_stats(data["username"])
+    profile = userConnection.get_user_profile(data["username"])
+    
 
     if response:
-        data = {"status": "200", "message": "User stats updated successfully.", "stats": stats}
+        data = {"status": "200", "message": "User stats updated successfully.","profile": profile,  "stats": stats}
         return jsonify(data), 200
     else:
         data = {"status": "400", "message": "User stats update failed."}
