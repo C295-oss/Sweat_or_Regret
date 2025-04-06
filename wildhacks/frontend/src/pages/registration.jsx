@@ -19,9 +19,14 @@ export default function Registration() {
       setErrorMessage("Invalid Username");
       return false;
     }
+    else if (userName.length < 4 || passWord.length < 4) {
+      setErrorMessage("Password and Username must be at least 4 characters")
+      return false;
+    }
 
-    localStorage.setItem("local_user_name", userName);
-    localStorage.setItem("local_password", passWord);
+    // 
+    localStorage.setItem("temp_username", userName);
+    localStorage.setItem("temp_password", passWord);
     setErrorMessage("");
     console.log("Form submitted:", { userName, passWord });
 

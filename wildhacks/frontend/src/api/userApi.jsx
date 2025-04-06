@@ -26,6 +26,54 @@ export default UserAPI;
 
 
 
+// - username: str
+// - password: str
+// - sex: char
+// - miletime: int
+// - plankTime: int
+// - burpees: int
+// - pushups: int
+// - situps: int
+// - squats: int
+// - fourtyYdDash: int
+// - flexibility: int
+export async function register(userData) {
+    const profile = {
+        username: userData.username,
+        password: userData.password,
+        sex: userData.sex,
+        miletime: userData.miletime,
+        plankTime: userData.plankTime,
+        burpees: userData.burpees,
+        pushups: userData.pushups,
+        situps: userData.situps,
+        squats: userData.squats,
+        fourtyYdDash: userData.fourtyYdDash,
+        flexibility: userData.flexibility,
+    };
+    console.log("profile being sent:", profile);
+
+    try {
+        const response = await fetch(`${BASE_URL}/createUser`, {
+            method: 'POST',
+            headers: {
+                "content-Type": "application/json",
+            },
+            body: JSON.stringify(profile),
+        });
+
+        if(!response.ok) {
+            throw error;
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error("Error creating the user:",error);
+    }
+}
+
+
+
 
 
   /**
