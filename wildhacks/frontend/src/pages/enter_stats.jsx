@@ -1,5 +1,6 @@
 import Button from "../components/ui/button";
 import React, { useState, useEffect } from "react";
+import UserAPI from "../api/userApi";
 
 const Enter_stats = () => {
 
@@ -14,7 +15,7 @@ const Enter_stats = () => {
     const [flexible, setFlexible] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         if (e) e.preventDefault();
 
         if (
@@ -37,6 +38,14 @@ const Enter_stats = () => {
         console.log("All data:", {
         sex, mileTime, plankTime, burpees, pushUps, sitUps, squats, yardDash, flexible
         });
+        try {
+            const response = await UserAPI.createUser({sex:sex,username:localStorage.getItem("local_user_name"),password:localStorage.getItem("local_password"),miletime:mileTime,planktime:plankTime,burpees:burpees,pushups:pushUps,situps:sitUps,squat:squats,fourtyYdDash:yardDash,flexiblity:flexible})
+
+        } catch(error) {
+            alert(error.message);
+        }
+
+        
         return true;
     };
     
