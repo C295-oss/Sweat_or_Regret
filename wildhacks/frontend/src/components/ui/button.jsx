@@ -8,7 +8,7 @@ export default function Button({ label, navigateTo, onClick, type = "button", cl
     if (onClick) {// Calls the passed onClick function if provided
       onClick(onClick); 
     }
-    if(navigateTo) {//switches screens
+    if(navigateTo) {
       navigate(navigateTo);
     }
   };
