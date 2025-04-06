@@ -9,6 +9,7 @@ export default function Login() {
   const navigate = useNavigate();
   const [username, setLogin] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleUsernameChange = (event) => {
     if(event.target.value.length < 20) {
@@ -31,6 +32,7 @@ export default function Login() {
     if(user.length < 5 || pass.length < 5) {
 
       console.error("Username and password must be at least 5 characters long.");
+      setErrorMessage("Username and password must be at least 5 characters long.");
       return;
     }
 
@@ -52,6 +54,7 @@ export default function Login() {
       // Handle successful login (e.g., redirect to home page)
     } catch (error) {
       console.error("Login error:", error);
+      setErrorMessage("Invalid username or password. Please try again.");
       // Handle error (e.g., show error message to user)
     }
   }
@@ -86,6 +89,8 @@ export default function Login() {
             required
           />
         </div>
+
+        {errorMessage && <p className="error-message">{errorMessage}</p>}
 
         <div className="button-container">
           <Button
