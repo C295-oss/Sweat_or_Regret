@@ -1,9 +1,12 @@
-from flask import Flask 
+from flask import Flask, request, jsonify
 from google import genai
+from datalayer import  UserLayer
 
 
 client = genai.Client(api_key="AIzaSyDmuCdB-kdSp3zjJXy5kK-AwORJ3FKa9xg")
 app = Flask(__name__)
+
+userConnection = UserLayer() 
 
 @app.after_request
 def after_request(response):
@@ -148,6 +151,164 @@ def getActionResult(scenario, action, death, success):
     result = getMoveResult(scenario, action, death, success)
 
     return {"result": result.text}
+
+
+"""
+Parameters:
+- username: str
+- password: str
+- sex: char
+- miletime: int
+- plankTime: int
+- burpees: int
+- pushups: int
+- situps: int
+- squats: int
+- fourtyYdDash: int
+- flexibility: int
+
+endPoint: "/createUser
+
+"""
+
+@app.route("/createUser", methods=["POST"])
+def createUser():
+    data = request.get_json()
+    if not data:
+        return jsonify({"error": "No data provided"}), 400
+    
+    response = userConnection.create_user(data["username"], data["password"], data["sex"], data["miletime"], data["plankTime"], data["burpees"], data["pushups"], data["situps"], data["squats"], data["fourtyYdDash"], data["flexibility"])
+
+    if response:
+        data = {"status": "200", "message": "User created successfully."}
+        return jsonify(data), 200
+    else:
+        data = {"status": "400", "message": "User creation failed."}
+        return jsonify(data), 400
+
+
+"""
+Parameters:
+- username: str
+
+endPoint: "/getUserStats
+
+"""
+@app.route("/getUserStats", methods=["GET"])
+def getUserStats():
+    username = request.args.get("username")
+    if not username:
+        return jsonify({"status": "400",}), 400
+    
+    response = userConnection.get_user_stats(username)
+
+    if response is None:
+        return jsonify({"status": "400", "message": "User not found."}), 400
+    
+
+    if response:
+        data = {"status": "200", "message": "User stats retrieved successfully.", "stats": response}
+        return jsonify(data), 200
+    else:
+        data = {"status": "400", "message": "User not found."}
+        return jsonify(data), 400
+    
+
+
+"""
+Parameters:
+- username: str
+
+endPoint: "/getUserProfile
+
+"""
+@app.route("/getUserProfile", methods=["GET"])
+def getUserProfile():
+    username = request.args.get("username")
+    if not username:
+        return jsonify({"status": "400", "message": "username not found"}), 400
+    
+    response = userConnection.get_user_profile(username)
+
+    if response is None:
+        return jsonify({"status": "400", "message": "User not found."}), 400
+    
+
+    if response:
+        data = {"status": "200", "message": "User profile retrieved successfully.", "profile": response}
+        return jsonify(data), 200
+    else:
+        data = {"status": "400", "message": "User not found.", "data": None}
+        return jsonify(data), 400
+    
+
+
+
+"""
+Parameters:
+- username: str
+- miletime: int
+- plankTime: int
+- burpees: int
+- pushups: int
+- situps: int
+- squats: int
+- fourtyYdDash: int
+- flexibility: int
+
+endPoint: "/updateUserProfile
+
+"""
+@app.route("/updateUserProfile", methods=["POST"])
+def updateUserStats():
+    data = request.get_json()
+    if not data:
+        return jsonify({"error": "No data provided"}), 400
+    
+    response = userConnection.update_user_stats(data["username"], data["miletime"], data["planktime"], data["burpees"], data["pushups"], data["situps"], data["squats"], data["fourtyYdDash"], data["flexibility"])
+
+    stats = userConnection.get_user_stats(data["username"])
+
+    if response:
+        data = {"status": "200", "message": "User stats updated successfully.", "stats": stats}
+        return jsonify(data), 200
+    else:
+        data = {"status": "400", "message": "User stats update failed."}
+        return jsonify(data), 400
+    
+
+
+"""
+Parameters:
+- username: str
+- password: str
+
+endPoint: "/login
+"""
+@app.route("/login", methods=["POST"])
+def login():
+    data = request.get_json()
+    if not data:
+        return jsonify({"error": "No data provided"}), 400
+    
+    print("data:", data)
+    response = userConnection.valid_user(data["username"], data["password"])
+
+    profile = userConnection.get_user_profile(data["username"])
+    stats = userConnection.get_user_stats(data["username"])
+
+    if response:
+        data = {"status": "200", "message": "User logged in successfully.", "profile": profile, "stats": stats}
+        print(data)
+        return jsonify(data), 200
+    else:
+        data = {"status": "400", "message": "User login failed."}
+        print(data)
+        return jsonify(data), 400
+
+    
+
+
 
 
 if __name__ == "__main__":

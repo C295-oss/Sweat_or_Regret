@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Button from '../components/ui/button';
+import Button from "../components/ui/button";
 import "./registration.css";
 
 export default function Registration() {
@@ -12,18 +12,16 @@ export default function Registration() {
     if (passWord !== confirmPassword) {
       setErrorMessage("Passwords do not match!");
       return false;
-    }
-    else if (passWord === null || passWord === "") {
-      setErrorMessage("Invalid password")
+    } else if (!passWord) {
+      setErrorMessage("Invalid password");
       return false;
-    }
-    else if (userName === null || userName === "") {
-      setErrorMessage("Invalid Username")
+    } else if (!userName) {
+      setErrorMessage("Invalid Username");
       return false;
     }
 
-    localStorage.setItem('local_user_name',userName);
-    localStorage.setItem('local_password',passWord);
+    localStorage.setItem("local_user_name", userName);
+    localStorage.setItem("local_password", passWord);
     setErrorMessage("");
     console.log("Form submitted:", { userName, passWord });
 
@@ -31,8 +29,8 @@ export default function Registration() {
   };
 
   return (
-    <div className="registration">
-      <h1>Registration</h1>
+    <div className="flex w-screen h-screen flex-col items-center justify-center p-2 bg-zinc-800">
+      <h1 className="registration-header">Registration</h1>
 
       <form>
         <div className="input-container">
@@ -71,17 +69,16 @@ export default function Registration() {
           />
         </div>
 
-        {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
+        {errorMessage && <p className="error-message">{errorMessage}</p>}
 
-        <br />
-
-        <Button
-          label="Next"
-          onClick={handleFormSubmit}
-          navigateTo="/enter_stats"
-          className="w-full"
-          size="lg"
-        />
+        <div className="button-container">
+          <Button
+            label="Next"
+            onClick={handleFormSubmit}
+            navigateTo="/enter_stats"
+            className="submit-button"
+          />
+        </div>
       </form>
     </div>
   );
