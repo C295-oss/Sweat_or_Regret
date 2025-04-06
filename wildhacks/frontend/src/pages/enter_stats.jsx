@@ -1,6 +1,9 @@
 import Button from "../components/ui/button";
 import React, { useState, useEffect } from "react";
 import UserAPI from "../api/userApi";
+import { register } from "../api/userApi.jsx";
+import { useNavigate } from "react-router-dom";
+import "./enter_stats.css";
 
 const Enter_stats = () => {
 
@@ -51,9 +54,9 @@ const Enter_stats = () => {
     
 
     return (
-        <div className="flex min-h-screen flex-col items-center justify-center p-4">
+        <div className="flex w-380 h-350 flex-col items-center justify-center p-2 bg-zinc-800">
 
-          <h3 className="text-4xl font-bold tracking-tight">Enter Stats</h3>
+          <h3 className="enter-stats-header">Enter Stats</h3>
           <br/>
           <form onSubmit={handleSubmit}>
           <div>
@@ -72,7 +75,7 @@ const Enter_stats = () => {
             </div>
             <br/>
             <div className="input-container">
-              <label htmlFor="mileTime">What is your best mile time in seconds?</label>
+              <label htmlFor="mileTime">What is your best mile time in minutes?</label>
               <input
                 type="number"
                 inputMode="numeric"
@@ -93,7 +96,7 @@ const Enter_stats = () => {
             </div>
             <br/>
             <div className="input-container">
-              <label htmlFor="plankTime">What is your best plank time in seconds?</label>
+              <label htmlFor="plankTime">What is your best plank time in minutes?</label>
               <input
                 type="number"
                 inputMode="numeric"
@@ -243,14 +246,17 @@ const Enter_stats = () => {
             {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
     
             <br />
-    
-            <Button
-                      label="Submit"
-                      onClick={handleSubmit}
-                      navigateTo="/home"
-                      className="w-full"
-                      size="lg"
-                    />
+
+            <div className="button-container">
+              <Button
+                label="Next"
+                onClick={handleSubmit}
+                navigateTo="/home"
+                className="submit-button"
+              />
+            </div>
+                
+          
           </form>
         </div>
       );
