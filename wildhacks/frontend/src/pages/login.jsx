@@ -46,6 +46,7 @@ export default function Login() {
         localStorage.setItem("local_password", pass);
         localStorage.setItem("profile", response.profile);
         localStorage.setItem("stats", response.stats);
+				localStorage.setItem("verify", true);
         navigate("/home");
       }
       // Handle successful login (e.g., redirect to home page)
