@@ -8,6 +8,7 @@ import Registration from './pages/registration'
 import Login from './pages/login'
 import Home from './pages/home'
 import Profile from './pages/profile'
+import Enter_stats from './pages/enter_stats';
 
 
 function App() {
@@ -20,8 +21,8 @@ function App() {
         <Route path="/login" element={Login()} />
         <Route path="/home" element={Home()} />
         <Route path="/profile" element={Profile()} />
+        <Route path="/enter_stats" element={Enter_stats()}/>
         <Route path="*" element={Welcome_screen()} />
-
       </Routes>
     </Router>
   )
