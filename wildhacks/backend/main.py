@@ -45,9 +45,10 @@ def getPotentialMoves(scenario, categories):
             4. Each option must correspond to one of these categories: {categories}
             5. Each option should be a concise physical action the player will perform.
             6. Do not include any explanations, introductions, or additional text.
+            7. Each move MUST have a workout tied with it that is semi-related.
             
             Example format:
-            "Climb the fence quickly,Crawl through the tight space,Sprint across the open field,Search for hidden clues"
+            "Climb the fence quickly (barbells),Crawl through the tight space (burpees),Sprint across the open field (200 meter dash),Search for hidden clues (jumping jacks)"
         """
     )
 
@@ -134,20 +135,24 @@ def main():
 
 
 # Example function call: http://127.0.0.1:5001/getScenarioAndMoves/[4,5,2,3]
-@app.route("/getScenarioAndMoves/<stats>/<prev>/")
-def getScenarioAndMoves(stats, prev):
-    stats = [float(s) for s in stats if s.isdigit()]
+# from flask import request
 
-    # get the scenario and actions
+@app.route("/getScenarioAndMoves", methods=["POST"])
+def getScenarioAndMoves():
+    data = request.get_json()
+    stats = data.get('stats', [])
+    prev = data.get('prev', '')
+    story = data.get('story', '')
+
     categories = ["Strength", "Stamina/Endurance", "Agility/Speed", "Wildcard"]
     
-    scenario = getScenario('zombie apocalypse', prev)
+    scenario = getScenario(story, prev)
     moves = getPotentialMoves(scenario.text, categories)
     requirement = getMoveRequirements(scenario.text, moves, categories)
     probability = getProbabilities(stats, requirement)
 
-    # Switched to json. Originally a dictionary
-    return {"scenario":scenario.text, "moves":moves, "probability": probability};
+    return {"scenario":scenario.text, "moves":moves, "probability": probability}
+
 
 
 @app.route("/getResult/<scenario>/<action>/<death>/<success>")

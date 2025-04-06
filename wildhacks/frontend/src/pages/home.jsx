@@ -4,12 +4,13 @@ import { Link } from "react-router";
 import './home.css'
 
 export default function Home() {
+  const [scenario, setScenario] = useState('');
   const [mainText, setMainText] = useState('Loading...');
   const [strength, setStrength] = useState(4);
   const [stamina, setStamina] = useState(4);
   const [agility, setAgility] = useState(4);
   const [wildcard, setWildcard] = useState(4);
-
+  
   
   const [options, setOptions] = useState([
     'Strength Action',
@@ -53,8 +54,20 @@ export default function Home() {
       // const statsParam = statsObj.values;
         
       // Make the API call
-      const response = await fetch(`http://127.0.0.1:5001/getScenarioAndMoves/${statsObj}/${mainText}`);
-        
+      // /${scenario}
+      // const response = await fetch(`http://127.0.0.1:5001/getScenarioAndMoves/${statsObj}/${mainText}/${scenario}`);
+      const response = await fetch(`http://127.0.0.1:5001/getScenarioAndMoves`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          stats: statsObj,
+          prev: mainText,
+          story: scenario,
+        }),
+      });  
+
       // Check response status before trying to parse JSON
       if (!response.ok) {
         throw new Error(`Response status: ${response.status}`);
@@ -104,7 +117,7 @@ export default function Home() {
       setMainText("Something went wrong when processing your action.");
     }
 
-    fetchData();
+    fetchData(scenario);
   }
 
 
@@ -149,20 +162,43 @@ export default function Home() {
           ))}
         </div>
 
-        <button className="w-full bg-violet-600 hover:bg-violet-700 text-white font-bold py-3 rounded-lg mt-6 transition-all duration-200 shadow-lg">
-          20 Minute jog for stamina boost!
+        <button 
+          onClick={() => {
+            setScenario('Zombie Apocalypse');
+            fetchData();
+          }}
+          className="w-full bg-violet-600 hover:bg-violet-700 text-white font-bold py-3 rounded-lg mt-6 transition-all duration-200 shadow-lg">
+          Zombie Appocolypse
         </button>
 
-        <button className="w-full bg-violet-600 hover:bg-violet-700 text-white font-bold py-3 rounded-lg mt-6 transition-all duration-200 shadow-lg">
-          20 push-ups for a strength boost!
+        <button 
+          onClick={() => {
+            setScenario('Prison Break');
+            fetchData();
+          }}
+          className="w-full bg-violet-600 hover:bg-violet-700 text-white font-bold py-3 rounded-lg mt-6 transition-all duration-200 shadow-lg"
+        >
+          Prison Break
         </button>
 
-        <button className="w-full bg-violet-600 hover:bg-violet-700 text-white font-bold py-3 rounded-lg mt-6 transition-all duration-200 shadow-lg">
-          10 minutes of stretches for agility boost!
+        <button 
+          onClick={() => {
+            setScenario('Jungle Escape');
+            fetchData();
+          }}
+          className="w-full bg-violet-600 hover:bg-violet-700 text-white font-bold py-3 rounded-lg mt-6 transition-all duration-200 shadow-lg"
+        >
+          Jungle Escape
         </button>
         
-        <button className="w-full bg-violet-600 hover:bg-violet-700 text-white font-bold py-3 rounded-lg mt-6 transition-all duration-200 shadow-lg">
-          Wildcard!
+        <button 
+          onClick={() => {
+            setScenario('Train Heist');
+            fetchData();
+          }}
+          className="w-full bg-violet-600 hover:bg-violet-700 text-white font-bold py-3 rounded-lg mt-6 transition-all duration-200 shadow-lg"
+        >
+          Train Heist
         </button>
         
       </div>
