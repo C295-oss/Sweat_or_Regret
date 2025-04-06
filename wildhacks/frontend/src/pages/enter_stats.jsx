@@ -291,13 +291,13 @@ const Enter_stats = () => {
     
             <br />
     
+          <div className="button-container">
             <Button
-                      label="Submit"
-                      onClick={handleSubmit}
-                  
-                      className="w-full"
-                      size="lg"
-                    />
+              label="Submit"
+              onClick={handleSubmit}
+              className="submit-button"
+            />
+          </div>
           </form>
         </div>
       );
