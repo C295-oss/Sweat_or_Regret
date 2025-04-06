@@ -1,0 +1,36 @@
+.registration form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 300px;
+    margin: 0 auto;
+  }
+  
+  .input-container {
+    display: flex;
+    flex-direction: column; /* Stack label on top of input */
+  }
+  
+  label {
+    margin-bottom: 5px;
+    font-size: 14px;
+    font-weight: bold;
+  }
+  
+  input {
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  input:focus {
+    border-color: #007bff;
+    outline: none;
+  }
+  
+  input::placeholder {
+    font-style: italic;
+    color: #aaa;
+  }
+  
