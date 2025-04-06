@@ -3,7 +3,7 @@ from google import genai
 from datalayer import  UserLayer
 
 
-client = genai.Client(api_key="AIzaSyDmuCdB-kdSp3zjJXy5kK-AwORJ3FKa9xg")
+client = genai.Client(api_key="AIzaSyCmcj6x3aSVFbaLSGMtiZAmSPs7FBlxusk")
 app = Flask(__name__)
 
 userConnection = UserLayer() 
@@ -40,10 +40,11 @@ def getPotentialMoves(scenario, categories):
             
             Important rules:
             1. You MUST provide exactly 4 options - no more, no less.
-            2. Format your response as four short statements separated by commas ONLY.
-            3. Each option must correspond to one of these categories: {categories}
-            4. Each option should be a concise physical action the player will perform.
-            5. Do not include any explanations, introductions, or additional text.
+            2. The moves provided must match the 4 listed in the given scenario.
+            3. Format your response as four short statements separated by commas ONLY.
+            4. Each option must correspond to one of these categories: {categories}
+            5. Each option should be a concise physical action the player will perform.
+            6. Do not include any explanations, introductions, or additional text.
             
             Example format:
             "Climb the fence quickly,Crawl through the tight space,Sprint across the open field,Search for hidden clues"
@@ -79,7 +80,7 @@ def getMoveRequirements(scenario, moves, categories):
             4. Do not include any explanations, introductions, or additional text.
             
             Example format:
-            "2,6,4,5"
+            "2,5,4,5"
         """
     )
 
@@ -133,14 +134,14 @@ def main():
 
 
 # Example function call: http://127.0.0.1:5001/getScenarioAndMoves/[4,5,2,3]
-@app.route("/getScenarioAndMoves/<stats>/<prev>")
+@app.route("/getScenarioAndMoves/<stats>/<prev>/")
 def getScenarioAndMoves(stats, prev):
     stats = [float(s) for s in stats if s.isdigit()]
 
     # get the scenario and actions
     categories = ["Strength", "Stamina/Endurance", "Agility/Speed", "Wildcard"]
     
-    scenario = getScenario("Zombie Apocolypse", prev)
+    scenario = getScenario('zombie apocalypse', prev)
     moves = getPotentialMoves(scenario.text, categories)
     requirement = getMoveRequirements(scenario.text, moves, categories)
     probability = getProbabilities(stats, requirement)
