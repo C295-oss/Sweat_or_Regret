@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import "./enter_stats.css";
 
 const Enter_stats = () => {
+    const navigate = useNavigate();
 
     const [sex, setSex] = useState("");
     const [mileTime, setMileTime] = useState("");
@@ -42,7 +43,50 @@ const Enter_stats = () => {
         sex, mileTime, plankTime, burpees, pushUps, sitUps, squats, yardDash, flexible
         });
         try {
-            const response = await UserAPI.createUser({sex:sex,username:localStorage.getItem("local_user_name"),password:localStorage.getItem("local_password"),miletime:mileTime,planktime:plankTime,burpees:burpees,pushups:pushUps,situps:sitUps,squat:squats,fourtyYdDash:yardDash,flexiblity:flexible})
+          // - username: str
+          // - password: str
+          // - sex: char
+          // - miletime: int
+          // - plankTime: int
+          // - burpees: int
+          // - pushups: int
+          // - situps: int
+          // - squats: int
+          // - fourtyYdDash: int
+          // - flexibility: int
+
+            const profile = {
+              username: localStorage.getItem("temp_username"),
+              password: localStorage.getItem("temp_password"),
+              sex: sex[0],
+              miletime: mileTime,
+              plankTime: plankTime,
+              burpees: burpees,
+              pushups: pushUps,
+              situps: sitUps,
+              squats: squats,
+              fourtyYdDash: yardDash,
+              flexibility: flexible
+            }
+
+            const response = await register(profile)
+            console.log("Response:", response);
+            
+            if(response.status != 200) {
+              console.log("Response:", response.message);
+                throw new Error("Failed to register user.");
+ 
+            }
+            else{
+                console.log("User registered successfully.");console.log("Response:", response.message);
+                navigate("/login")
+                // localStorage.setItem("verify", "true");
+
+                
+                
+            }
+
+
 
         } catch(error) {
             alert(error.message);
@@ -69,8 +113,8 @@ const Enter_stats = () => {
                     required
                 >
                     <option value="" disabled>Select...</option>
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
+                    <option value="M">Male</option>
+                    <option value="F">Female</option>
                 </select>
             </div>
             <br/>
@@ -246,17 +290,14 @@ const Enter_stats = () => {
             {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
     
             <br />
-
-            <div className="button-container">
-              <Button
-                label="Next"
-                onClick={handleSubmit}
-                navigateTo="/home"
-                className="submit-button"
-              />
-            </div>
-                
-          
+    
+            <Button
+                      label="Submit"
+                      onClick={handleSubmit}
+                  
+                      className="w-full"
+                      size="lg"
+                    />
           </form>
         </div>
       );
