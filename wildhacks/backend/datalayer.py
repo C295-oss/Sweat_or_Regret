@@ -1,5 +1,8 @@
 import math
 import sqlite3
+from dotenv import load_dotenv
+import os
+
 class DataLayerMen:
 
     def __init__(self, db_connection):
@@ -355,13 +358,47 @@ class DataLayerWomen:
     
 
 class UserLayer:
-    def __init__(self, db_connection):
-        self.db_connection = db_connection
-        self.DataLayerMen = DataLayerMen(db_connection)
-        self.DataLayerWomen = DataLayerWomen(db_connection)
+    def __init__(self):
+        load_dotenv()
+        db_path = os.getenv("DB_PATH")
+        if db_path is None:
+            raise ValueError("DB_PATH environment variable not set")
+        if not os.path.exists(db_path):
+            raise FileNotFoundError(f"Database file not found at {db_path}")
+        self.db_connection = sqlite3.connect(db_path)
+        self.db_cursor = self.set_cursor()
+        self.DataLayerMen = DataLayerMen(self.db_connection)
+        self.DataLayerWomen = DataLayerWomen(self.db_connection)
 
+    # def __init__(self, db_connection):
+    #     self.db_cursor = self.set_cursor()
+    #     self.db_connection = None
+    #     self.DataLayerMen = DataLayerMen(self.db_connection)
+    #     self.DataLayerWomen = DataLayerWomen(self.db_connection)
+
+    
+
+    def set_cursor(self):
+        load_dotenv()
+        db_path = os.getenv("DB_PATH")
+        if db_path is None:
+            raise ValueError("DB_PATH environment variable not set")
+        if not os.path.exists(db_path):
+            raise FileNotFoundError(f"Database file not found at {db_path}")
+        
+        connect = sqlite3.connect(db_path, check_same_thread=False)
+        self.set_db_connection(connect)
+
+        return connect.cursor()
+    
+    def set_db_connection(self, db_connection):
+        self.db_connection = db_connection
+    
     def get_cursor(self):
-        return self.db_connection.cursor()
+        if self.db_cursor is None:
+            self.db_cursor = self.set_cursor()
+        return self.db_cursor
+
     
     def create_user(self, username, password, sex, miletime, plankTime, burpees,pushups, situps,  squat, fourtyYdDash, flexibility):
         sql_create_profile = """--sql
@@ -390,6 +427,11 @@ class UserLayer:
         sql_validate_user = """--sql
         SELECT * FROM profile WHERE username = ? AND password = ?;
         """
+
+        print("valid user: ", username, password)
+        if(self.user_exists(username) == False):
+            return False
+        
         cursor = self.get_cursor()
         cursor.execute(sql_validate_user, (username, password))
 
@@ -450,9 +492,7 @@ class UserLayer:
             strength = self.DataLayerWomen.getStrength(user_profile["pushups"], user_profile["squat"], user_profile["situps"])
             agility = self.DataLayerWomen.getAgility(user_profile["flexibility"], user_profile["miletime"])
         else:
-            endurance = 0
-            strength = 0
-            agility = 0
+            return None
        
 
         stats = {

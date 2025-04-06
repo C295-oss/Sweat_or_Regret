@@ -12,7 +12,7 @@ import Enter_stats from './pages/enter_stats';
 
 function verify_log_in() {
   try {
-    if (localStorage.getItem('local_user_name').length < 4  || localStorage.getItem("local_password").length < 4) {
+    if (localStorage.getItem('local_username').length < 4  || localStorage.getItem("local_password").length < 4) {
       return (false); 
     }
   }
