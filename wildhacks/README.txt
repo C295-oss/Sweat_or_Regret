@@ -4,3 +4,8 @@ npm install react-router-dom
 npm run dev 
 
 npm install tailwindcss @tailwindcss/viteeeee
+
+
+
+# username: testUser
+# password: password123

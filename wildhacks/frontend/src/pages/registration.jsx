@@ -20,8 +20,9 @@ export default function Registration() {
       return false;
     }
 
-    localStorage.setItem("local_user_name", userName);
-    localStorage.setItem("local_password", passWord);
+    // 
+    localStorage.setItem("temp_username", userName);
+    localStorage.setItem("temp_password", passWord);
     setErrorMessage("");
     console.log("Form submitted:", { userName, passWord });
 
