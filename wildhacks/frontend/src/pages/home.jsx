@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from "react-router";
 
 export default function Home() {
   const [mainText, setMainText] = useState('Loading...');
@@ -6,8 +7,8 @@ export default function Home() {
   const [stamina, setStamina] = useState(5);
   const [agility, setAgility] = useState(5);
   const [wildcard, setWildcard] = useState(5);
+
   
-  // Need to use useState for these arrays
   const [options, setOptions] = useState([
     'Strength Action',
     'Stamina Action',
@@ -17,52 +18,52 @@ export default function Home() {
 
   const [probs, setProbs] = useState([0.0, 0.0, 0.0, 0.0]);
 
+  
+  async function fetchData() {
+    const statsObj = {
+      strength: strength,
+      stamina: stamina,
+      agility: agility,
+      wildcard: wildcard
+    };
+
+    try {
+      
+      const statsParam = encodeURIComponent(JSON.stringify(statsObj));
+        
+      // Make the API call
+      const response = await fetch(`http://127.0.0.1:5001/getScenarioAndMoves/${statsParam}`);
+        
+      // Check response status before trying to parse JSON
+      if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+      }
+        
+      // Need to await the JSON parsing
+      const json = await response.json();
+        
+      console.log("API response:", json);
+        
+      // Update state with fetched data
+      if (json.scenario) setMainText(json.scenario);
+      if (json.moves) setOptions(json.moves);
+      if (json.probability) setProbs(json.probability);
+    }
+    catch (err) {
+      console.error("Error fetching data:", err.message);
+      setMainText("Failed to load scenario. Please try again.");
+    }
+  }
 
   // The useEffect Hook allows you to perform side effects in your components.
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        // Create a proper stats object to send
-        const statsObj = {
-          strength: strength,
-          stamina: stamina,
-          agility: agility,
-          wildcard: wildcard
-        };
-          
-        // Encode the stats properly
-        const statsParam = encodeURIComponent(JSON.stringify(statsObj));
-          
-        // Make the API call
-        const response = await fetch(`http://127.0.0.1:5001/getScenarioAndMoves/${statsParam}`);
-          
-        // Check response status before trying to parse JSON
-        if (!response.ok) {
-          throw new Error(`Response status: ${response.status}`);
-        }
-          
-        // Need to await the JSON parsing
-        const json = await response.json();
-          
-        console.log("API response:", json);
-          
-        // Update state with fetched data
-        if (json.scenario) setMainText(json.scenario);
-        if (json.moves) setOptions(json.moves);
-        if (json.probability) setProbs(json.probability);
-      }
-      catch (err) {
-        console.error("Error fetching data:", err.message);
-        setMainText("Failed to load scenario. Please try again.");
-      }
-    }
-    
+  useEffect(() => { 
     fetchData();
-
     // Add dependency array to prevent infinite loop
   }, []);
 
+
   async function handleOptionClick(action, index) {
+    // disableButtons();
     const success = Math.random() < probs[index];
   
     try {
@@ -76,12 +77,15 @@ export default function Home() {
   
       const json = await res.json();
       console.log("Action result:", json);
-      setMainText(json.result);
+      setMainText(mainText + '\n\n\n' + json.result + '\n\n\n');
     } catch (err) {
       console.error("Failed to get result:", err.message);
       setMainText("Something went wrong when processing your action.");
     }
+
+    fetchData();
   }
+
 
   // Create a stats array for rendering
   const statsArray = [
@@ -97,7 +101,16 @@ export default function Home() {
       <div className="w-1/2 p-4">
         <h1 className="text-white font-bold text-2xl mb-2">Sweat or Regret</h1>
         <h2 className="text-white font-bold text-4xl mb-6">Personal Stats</h2>
-        
+
+
+        <div className="grid grid-cols-3 gap-2 bg-zinc-800 p-3 rounded-lg mb-4">
+          <Link to='/' className="text-violet-400 hover:text-violet-200 font-medium text-center py-2 px-4 rounded-md hover:bg-violet-900/30 transition-all duration-200">Welcome</Link>
+          <Link to='/enter_stats' className="text-violet-400 hover:text-violet-200 font-medium text-center py-2 px-4 rounded-md hover:bg-violet-900/30 transition-all duration-200">Enter Stats</Link>
+          <Link to='/profile' className="text-violet-400 hover:text-violet-200 font-medium text-center py-2 px-4 rounded-md hover:bg-violet-900/30 transition-all duration-200">My Profile</Link>
+        </div>
+
+        <div className="h-px bg-violet-500 w-full my-4"></div>
+
         {/* Stats Grid */}
         <div className="grid grid-cols-2 gap-4">
           {statsArray.map((stat) => (
@@ -118,13 +131,13 @@ export default function Home() {
 
       {/* Scenario and Options Section */}
       <div className="w-1/2 p-4">
-        <div className="rounded-2xl w-full h-3/4 text-white p-6 bg-zinc-900 overflow-auto">
+        <div className="rounded-2xl w-full h-3/4 text-white p-6 bg-zinc-900 overflow-auto text-pretty">
           <h1 className="text-xl font-bold mb-4">Scenario</h1>
-          <p className="text-lg">{mainText}</p>
+          <p className="text-lg whitespace-pre-wrap">{mainText}</p>
         </div>
 
         {/* Options */}
-        <div className="grid grid-cols-2 gap-3 mt-4">
+        <div id="action-div" className="grid grid-cols-2 gap-3 mt-4">
           {options.map((option, index) => (
             <button
               key={index}
