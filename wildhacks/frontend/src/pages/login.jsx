@@ -9,6 +9,7 @@ export default function Login() {
   const navigate = useNavigate();
   const [username, setLogin] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleUsernameChange = (event) => {
     if(event.target.value.length < 20) {
@@ -31,6 +32,7 @@ export default function Login() {
     if(user.length < 5 || pass.length < 5) {
 
       console.error("Username and password must be at least 5 characters long.");
+      setErrorMessage("Username and password must be at least 5 characters long.");
       return;
     }
 
@@ -47,29 +49,58 @@ export default function Login() {
       
         localStorage.setItem("profile", response.profile);
         localStorage.setItem("stats", response.stats);
+				localStorage.setItem("verify", true);
         navigate("/home");
       }
       // Handle successful login (e.g., redirect to home page)
     } catch (error) {
       console.error("Login error:", error);
+      setErrorMessage("Invalid username or password. Please try again.");
       // Handle error (e.g., show error message to user)
     }
   }
 	
 
   return (
-    <div>
-      <ul className="pt-4 space-y-2">
-        <li>
-          <h1>Login</h1></li>
-        <li className="mt-10">
-          <input onChange={handleUsernameChange} placeholder="Username"/>
-        </li>
-        <li>
-          <input type="password" onChange={handlePasswordChange} placeholder="Password"/>
-        </li>
-        <li><Button onClick={handleLogin} label="login">login</Button></li>
-      </ul>
+    <div className="flex w-screen h-screen flex-col items-center justify-center p-2 bg-zinc-800">
+      <h1 className="ext-white font-bold text-2xl tracking-tight mb-2 text-white">Login</h1>
+      <br/>
+
+      <form>
+        <div className="input-container">
+          <label htmlFor="userName">Username:</label>
+          <input
+            type="text"
+            id="userName"
+            value={username}
+            onChange={(e) => handleUsernameChange(e)}
+            placeholder="Enter your username"
+            required
+          />
+        </div>
+
+        <div className="input-container">
+          <label htmlFor="passWord">Password:</label>
+          <input
+            type="password"
+            id="passWord"
+            value={password}
+            onChange={(e) => handlePasswordChange(e)}
+            placeholder="Enter your password"
+            required
+          />
+        </div>
+
+        {errorMessage && <p className="error-message">{errorMessage}</p>}
+
+        <div className="button-container">
+          <Button
+            label="Login"
+            onClick={handleLogin}
+            className="submit-button"
+          />
+        </div>
+      </form>
     </div>
   );
 }

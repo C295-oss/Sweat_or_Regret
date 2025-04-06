@@ -10,6 +10,7 @@ import Home from './pages/home'
 import Profile from './pages/profile'
 import Enter_stats from './pages/enter_stats';
 
+
 function verify_log_in() {
     try {
       // if(localStorage.getItem('verify') != "true") {
@@ -47,10 +48,17 @@ function App() {
         <Route path="/" element={<Welcome_screen />} />
         <Route path="/registration" element={<Registration/>} />
         <Route path="/login" element={<Login/>} />
+        <Route path="/home" element={ <Home/>} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/enter_stats" element={ <Enter_stats/>}/>
+        <Route path="*" element={<Welcome_screen/>} />
+        {/* <Route path="/" element={<Welcome_screen />} />
+        <Route path="/registration" element={<Registration/>} />
+        <Route path="/login" element={<Login/>} />
         <Route path="/home" element={verify_log_in() ? <Home/> : <Welcome_screen/>} />
         <Route path="/profile" element={verify_log_in() ? <Profile /> : <Welcome_screen/>} />
         <Route path="/enter_stats" element={access_enter_stats() ? <Enter_stats/> : <Welcome_screen/>}/>
-        <Route path="*" element={<Welcome_screen/>} />
+        <Route path="*" element={<Welcome_screen/>} /> */}
       </Routes>
     </Router>
   )
