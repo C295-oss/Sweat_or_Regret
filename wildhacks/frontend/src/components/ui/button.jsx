@@ -9,6 +9,7 @@ export default function Button({ label, navigateTo, onClick, type = "button", cl
 
     // Only navigate if onClick returned true (or if there's no onClick)
     if (shouldNavigate && navigateTo) {
+
       navigate(navigateTo);
     }
   };
