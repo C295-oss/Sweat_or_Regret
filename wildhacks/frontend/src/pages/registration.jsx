@@ -1,14 +1,17 @@
 import React, { useState } from "react";
 import Button from "../components/ui/button";
 import "./registration.css";
+import { userExists } from "../api/userApi";
+import { useNavigate } from "react-router-dom";
 
 export default function Registration() {
+  const Navigate = useNavigate();
   const [userName, setUserName] = useState("");
   const [passWord, setPassWord] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
-  const handleFormSubmit = () => {
+  const handleFormSubmit = async () => {
     if (passWord !== confirmPassword) {
       setErrorMessage("Passwords do not match!");
       return false;
@@ -23,13 +26,19 @@ export default function Registration() {
       setErrorMessage("Password and Username must be at least 4 characters")
       return false;
     }
+    const response = await userExists(userName);
+    if(response.status === 200) {
+      setErrorMessage("Username already exists!");
+      return false;
+    }
+
 
     // 
     localStorage.setItem("temp_username", userName);
     localStorage.setItem("temp_password", passWord);
     setErrorMessage("");
     console.log("Form submitted:", { userName, passWord });
-
+    Navigate("/enter_stats");
     return true;
   };
 
@@ -80,7 +89,6 @@ export default function Registration() {
           <Button
             label="Next"
             onClick={handleFormSubmit}
-            navigateTo="/enter_stats"
             className="submit-button"
           />
         </div>

@@ -176,15 +176,28 @@ def createUser():
     data = request.get_json()
     if not data:
         return jsonify({"error": "No data provided"}), 400
-    
-    response = userConnection.create_user(data["username"], data["password"], data["sex"], data["miletime"], data["plankTime"], data["burpees"], data["pushups"], data["situps"], data["squats"], data["fourtyYdDash"], data["flexibility"])
+    try:
+        response = userConnection.create_user(data["username"], data["password"], data["sex"], data["miletime"], data["plankTime"], data["burpees"], data["pushups"], data["situps"], data["squats"], data["fourtyYdDash"], data["flexibility"])
+    except Exception as e:
+        print("Error creating user:", e)
+        return jsonify({"status": "500", "message": "Internal server error."}), 500
+
+    print("response:", response)
 
     if response:
         data = {"status": "200", "message": "User created successfully."}
+        print("data", data)
         return jsonify(data), 200
     else:
-        data = {"status": "400", "message": "User creation failed."}
+        data = {"status": "400", "message": "User creation failed ."}
+        print("data", data)
         return jsonify(data), 400
+
+
+
+
+
+
 
 
 """
@@ -196,7 +209,7 @@ endPoint: "/getUserStats
 """
 @app.route("/getUserStats", methods=["GET"])
 def getUserStats():
-    username = request.args.get("username")
+    username = request.get_json("username")
     if not username:
         return jsonify({"status": "400",}), 400
     
@@ -214,6 +227,36 @@ def getUserStats():
         return jsonify(data), 400
     
 
+"""
+Parameters:
+- username: str
+
+endPoint: "/userExists
+
+"""
+@app.route("/userExists", methods=["POST"])
+def getUser():
+    data = request.get_json()
+    
+    if not data:
+        return jsonify({"status": "400",}), 400
+    
+    username = data["username"]
+
+    print("username:", username)
+    response = userConnection.user_exists(data["username"])
+
+    if response is None:
+        return jsonify({"status": "400", "message": "User not found."}), 400
+    
+
+    if response:
+        data = {"status": "200", "message": "Username exists", "exists": True}
+        return jsonify(data), 200
+    else: 
+        data = {"status": "400", "message": "User not found.", "exists": False}
+        return jsonify(data), 400
+    
 
 """
 Parameters:

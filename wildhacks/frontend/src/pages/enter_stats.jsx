@@ -4,6 +4,7 @@ import { register } from "../api/userApi.jsx";
 import { useNavigate } from "react-router-dom";
 
 const Enter_stats = () => {
+    const navigate = useNavigate();
 
     const [sex, setSex] = useState("");
     const [mileTime, setMileTime] = useState("");
@@ -51,13 +52,39 @@ const Enter_stats = () => {
           // - squats: int
           // - fourtyYdDash: int
           // - flexibility: int
-          
-            const profile = {
 
+            const profile = {
+              username: localStorage.getItem("temp_username"),
+              password: localStorage.getItem("temp_password"),
+              sex: sex[0],
+              miletime: mileTime,
+              plankTime: plankTime,
+              burpees: burpees,
+              pushups: pushUps,
+              situps: sitUps,
+              squats: squats,
+              fourtyYdDash: yardDash,
+              flexibility: flexible
             }
 
-            const response = await register
-            const response = await UserAPI.createUser({sex:sex,username:localStorage.getItem("temp_username"),password:localStorage.getItem("temp_password"),miletime:mileTime,planktime:plankTime,burpees:burpees,pushups:pushUps,situps:sitUps,squat:squats,fourtyYdDash:yardDash,flexiblity:flexible})
+            const response = await register(profile)
+            console.log("Response:", response);
+            
+            if(response.status != 200) {
+              console.log("Response:", response.message);
+                throw new Error("Failed to register user.");
+ 
+            }
+            else{
+                console.log("User registered successfully.");console.log("Response:", response.message);
+                navigate("/login")
+                // localStorage.setItem("verify", "true");
+
+                
+                
+            }
+
+
 
         } catch(error) {
             alert(error.message);
@@ -84,8 +111,8 @@ const Enter_stats = () => {
                     required
                 >
                     <option value="" disabled>Select...</option>
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
+                    <option value="M">Male</option>
+                    <option value="F">Female</option>
                 </select>
             </div>
             <br/>
@@ -265,7 +292,7 @@ const Enter_stats = () => {
             <Button
                       label="Submit"
                       onClick={handleSubmit}
-                      navigateTo="/home"
+                  
                       className="w-full"
                       size="lg"
                     />

@@ -42,19 +42,19 @@ export async function register(userData) {
         username: userData.username,
         password: userData.password,
         sex: userData.sex,
-        miletime: userData.miletime,
-        plankTime: userData.plankTime,
-        burpees: userData.burpees,
-        pushups: userData.pushups,
-        situps: userData.situps,
-        squats: userData.squats,
-        fourtyYdDash: userData.fourtyYdDash,
-        flexibility: userData.flexibility,
+        miletime: Number(userData.miletime),
+        plankTime: Number(userData.plankTime),
+        burpees: Number(userData.burpees),
+        pushups: Number(userData.pushups),
+        situps: Number(userData.situps),
+        squats: Number(userData.squats),
+        fourtyYdDash: Number(userData.fourtyYdDash),
+        flexibility: Number(userData.flexibility),
     };
     console.log("profile being sent:", profile);
 
     try {
-        const response = await fetch(`${BASE_URL}/createUser`, {
+        const data = await fetch(`${BASE_URL}/createUser`, {
             method: 'POST',
             headers: {
                 "content-Type": "application/json",
@@ -62,11 +62,17 @@ export async function register(userData) {
             body: JSON.stringify(profile),
         });
 
-        if(!response.ok) {
+        if(!data.ok) {
             throw error;
         }
 
-        return await response.json();
+
+        const response = await data.json();
+        response.status = Number(data.status);
+        // response.status = response.status;
+        console.log("response user: ", response);
+
+        return response
     } catch (error) {
         console.error("Error creating the user:",error);
     }
@@ -114,3 +120,39 @@ export async function register(userData) {
   
     return data;
   }
+
+
+    /**
+ * This function is get the visible listings available
+ *
+ * @param token - The unique token user will have to confirm identiy
+ * @returns the response body from the server
+ */
+    export async function userExists(Username){
+
+        const bodySent = {
+          username: Username
+        };
+        // console.log("Token being sent:", Token);
+      
+        // send put request
+        const response = await fetch(`${BASE_URL}/userExists`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(bodySent), 
+        }); // send the token in the request body
+      
+        
+      
+        const data = await response.json(); 
+        console.log("Response of server: ", data);
+        data.status = Number(data.status);
+        
+        console.log("response user: ", data);
+      
+        console.log("response message: ",data.message); 
+      
+        return data;
+      }
